@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+<div class="jumbotron text-center">
+    <h1 class="display-4">Bienvenue au Système Bancaire</h1>
+    <p class="lead">Gérez vos comptes, effectuez des transactions, et bien plus encore.</p>
+    <hr class="my-4">
+    <p>Inscrivez-vous ou connectez-vous pour commencer.</p>
+    <a class="btn btn-primary btn-lg" href="{{ url_for('register') }}" role="button">S'inscrire</a>
+    <a class="btn btn-success btn-lg" href="{{ url_for('login') }}" role="button">Se connecter</a>
+</div>
+{% endblock %}

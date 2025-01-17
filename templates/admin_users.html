@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Gestion des utilisateurs{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-4">Gestion des utilisateurs</h1>
+        <!-- Lien de retour -->
+        <div class="mb-4">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour au tableau de bord admin
+            </a>
+        </div>
+    
+
+    <div class="row mt-4">
+        <!-- Formulaire pour ajouter un utilisateur -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title">Ajouter un utilisateur</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="form-group">
+                            <label for="username">Nom d'utilisateur</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Mot de passe</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="full_name">Nom complet</label>
+                            <input type="text" class="form-control" id="full_name" name="full_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="role">Rôle</label>
+                            <select class="form-control" id="role" name="role" required>
+                                <option value="USER">Utilisateur</option>
+                                <option value="EMPLOYEE">Employé</option>
+                                <option value="ADMIN">Administrateur</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liste des utilisateurs -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title">Liste des utilisateurs</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for user in users %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ user[3] }} ({{ user[4] }})
+                            <a href="{{ url_for('admin_delete_user', user_id=user[0]) }}" class="btn btn-danger btn-sm">
+                                Supprimer
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

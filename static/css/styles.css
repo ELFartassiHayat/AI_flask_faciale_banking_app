@@ -1,0 +1,311 @@
+/* Styles généraux */
+body {
+  background-color: #f8f9fa;
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+/* Styles pour la barre de navigation */
+.navbar {
+  margin-bottom: 20px;
+  background-color: #343a40 !important;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.navbar-nav .nav-link {
+  color: #fff !important;
+  margin-right: 10px;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #007bff !important;
+}
+
+/* Styles pour les cartes */
+.card {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: #007bff;
+  color: white;
+  border-radius: 8px 8px 0 0;
+  padding: 15px;
+}
+
+.card-title {
+  margin-bottom: 0;
+  font-size: 1.25rem;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+/* Styles pour les boutons */
+.btn {
+  margin-right: 5px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+  border-color: #d39e00;
+}
+
+.btn-info {
+  background-color: #17a2b8;
+  border-color: #17a2b8;
+}
+
+.btn-info:hover {
+  background-color: #138496;
+  border-color: #117a8b;
+}
+
+/* Styles pour les formulaires */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-control {
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Styles pour les listes */
+.list-group {
+  margin-bottom: 20px;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
+  border-radius: 4px;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+/* Styles pour les alertes */
+.alert {
+  margin-bottom: 20px;
+  border-radius: 4px;
+  padding: 10px 15px;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  color: #0c5460;
+}
+
+/* Styles pour le footer */
+.footer {
+  margin-top: auto; 
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}
+
+/* Styles pour les pages spécifiques */
+
+/* Page d'accueil */
+.jumbotron {
+  background-color: #e9ecef;
+  padding: 2rem 1rem;
+  margin-bottom: 2rem;
+  border-radius: 0.3rem;
+}
+
+.jumbotron h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.jumbotron p {
+  font-size: 1.25rem;
+}
+
+/* Page de connexion et d'inscription */
+.login-card, .register-card {
+  max-width: 500px;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
+.login-card .card-header, .register-card .card-header {
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+/* Tableau de bord admin */
+.admin-dashboard .card {
+  margin-bottom: 20px;
+}
+
+.admin-dashboard .card-header {
+  background-color: #007bff;
+  color: white;
+}
+
+.admin-dashboard .card-body {
+  padding: 20px;
+}
+
+/* Gestion des utilisateurs */
+.admin-users .card {
+  margin-bottom: 20px;
+}
+
+.admin-users .card-header {
+  background-color: #007bff;
+  color: white;
+}
+
+.admin-users .card-body {
+  padding: 20px;
+}
+
+.admin-users .list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Tableau de bord employé */
+.employee-dashboard .card {
+  margin-bottom: 20px;
+}
+
+.employee-dashboard .card-header {
+  background-color: #007bff;
+  color: white;
+}
+
+.employee-dashboard .card-body {
+  padding: 20px;
+}
+
+.employee-dashboard .list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Page de transfert */
+.transfer-card {
+  max-width: 500px;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
+.transfer-card .card-header {
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+/* Page des factures */
+.invoices-card {
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
+.invoices-card .card-header {
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+/* Page des prêts */
+.loans-card {
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
+.loans-card .card-header {
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  font-size: 1.5rem;
+}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-4">Bienvenue, {{ user[3] }} !</h1>
+    <p class="lead">Rôle : {{ user[4] }}</p>
+    <p class="lead">Solde : {{ user[5] }} €</p>
+
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Effectuer un transfert</h5>
+                    <a href="{{ url_for('transfer') }}" class="btn btn-primary">Transférer</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Gérer les factures</h5>
+                    <a href="{{ url_for('invoices') }}" class="btn btn-primary">Factures</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Demander un prêt</h5>
+                    <a href="{{ url_for('loans') }}" class="btn btn-primary">Prêts</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

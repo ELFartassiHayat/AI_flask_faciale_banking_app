@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Demander un prêt{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-4">Demander un prêt</h1>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+             <!-- Lien de retour -->
+             <div class="mb-4">
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour au tableau de bord
+                </a>
+            </div>
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title">Soumettre une demande de prêt</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="form-group">
+                            <label for="amount">Montant</label>
+                            <input type="number" class="form-control" id="amount" name="amount" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="interest_rate">Taux d'intérêt</label>
+                            <input type="number" class="form-control" id="interest_rate" name="interest_rate" step="0.01" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Soumettre</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title">Liste des prêts</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for loan in loans %}
+                        <li class="list-group-item">
+                            {{ loan[2] }} € - Taux : {{ loan[3] }}% ({{ loan[4] }})
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

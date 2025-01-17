@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block content %}
+<div class="container flex-grow-1 ">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mt-5">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title text-center">Inscription</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Message d'information -->
+                    <div class="alert alert-info">
+                        <strong>Attention :</strong> L'inscription nécessite l'utilisation de votre caméra. 
+                        Veuillez autoriser l'accès à votre caméra pour capturer votre visage.
+                    </div>
+
+                    <!-- Formulaire d'inscription -->
+                    <form method="POST">
+                        <div class="form-group">
+                            <label for="username">Nom d'utilisateur</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Mot de passe</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="full_name">Nom complet</label>
+                            <input type="text" class="form-control" id="full_name" name="full_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="role">Rôle</label>
+                            <select class="form-control" id="role" name="role" required>
+                                <option value="USER">Utilisateur</option>
+                                <option value="EMPLOYEE">Employé</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">S'inscrire</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

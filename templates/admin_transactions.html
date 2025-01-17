@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Transactions Admin{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-4">Transactions</h1>
+        <!-- Lien de retour -->
+        <div class="mb-4">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour au tableau de bord admin
+            </a>
+        </div>
+    
+    
+    <ul class="list-group">
+        {% for transaction in transactions %}
+        <li class="list-group-item">
+            De : {{ transaction[1] }} | À : {{ transaction[2] }} | Montant : {{ transaction[3] }} € | Date : {{ transaction[4] }}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

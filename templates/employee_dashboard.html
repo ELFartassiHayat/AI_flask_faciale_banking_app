@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Tableau de bord Employé{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-4">Tableau de bord Employé</h1>
+
+    <h2 class="mt-4">Transactions</h2>
+    <ul class="list-group">
+        {% for transaction in transactions %}
+        <li class="list-group-item">
+            De : {{ transaction[1] }} | À : {{ transaction[2] }} | Montant : {{ transaction[3] }} € | Date : {{ transaction[4] }}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h2 class="mt-4">Factures</h2>
+    <ul class="list-group">
+        {% for invoice in invoices %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Utilisateur : {{ invoice[1] }} | Montant : {{ invoice[2] }} € | Description : {{ invoice[3] }} | Statut : {{ invoice[4] }}
+            <a href="{{ url_for('employee_pay_invoice', invoice_id=invoice[0]) }}" class="btn btn-success btn-sm">
+                Marquer comme payée
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h2 class="mt-4">Prêts</h2>
+    <ul class="list-group">
+        {% for loan in loans %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Utilisateur : {{ loan[1] }} | Montant : {{ loan[2] }} € | Taux : {{ loan[3] }}% | Statut : {{ loan[4] }}
+            <div>
+                <a href="{{ url_for('employee_approve_loan', loan_id=loan[0]) }}" class="btn btn-success btn-sm">
+                    Approuver
+                </a>
+                <a href="{{ url_for('employee_reject_loan', loan_id=loan[0]) }}" class="btn btn-danger btn-sm ml-2">
+                    Rejeter
+                </a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

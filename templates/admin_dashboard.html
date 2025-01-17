@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Tableau de bord Admin{% endblock %}
+
+{% block content %}
+<div class="container main-content">
+    <h1 class="mt-4">Tableau de bord Admin</h1>
+
+    <div class="row mt-4">
+        <!-- Carte pour gérer les utilisateurs -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title">Gérer les utilisateurs</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Ajouter,  supprimer des utilisateurs.</p>
+                    <a href="{{ url_for('admin_users') }}" class="btn btn-primary">Accéder</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carte pour voir les transactions -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title">Voir les transactions</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Consulter l'historique des transactions.</p>
+                    <a href="{{ url_for('admin_transactions') }}" class="btn btn-success">>Accéder</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carte pour voir les prêts -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="card-title">Voir les prêts</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Consulter les demandes de prêts.</p>
+                    <a href="{{ url_for('admin_loans') }}" class="btn btn-warning">Accéder</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section pour afficher les statistiques -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title">Statistiques</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Nombre total d'utilisateurs : {{ users|length }}</p>
+                    <p class="card-text">Nombre total de transactions : {{ transactions|length }}</p>
+                    <p class="card-text">Nombre total de prêts : {{ loans|length }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
