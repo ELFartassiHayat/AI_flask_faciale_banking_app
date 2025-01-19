@@ -24,9 +24,9 @@ SHAPE_PREDICTOR_PATH = "shape_predictor_68_face_landmarks.dat"
 FACE_RECOGNITION_PATH = "dlib_face_recognition_resnet_model_v1.dat"
 
 # Charger les modèles dlib
-detector = dlib.get_frontal_face_detector()
-sp = dlib.shape_predictor(SHAPE_PREDICTOR_PATH)
-facerec = dlib.face_recognition_model_v1(FACE_RECOGNITION_PATH)
+detector = dlib.get_frontal_face_detector()  # Détecteur de visages
+sp = dlib.shape_predictor(SHAPE_PREDICTOR_PATH)  # Prédicteur de points de repère faciaux
+facerec = dlib.face_recognition_model_v1(FACE_RECOGNITION_PATH)  # Modèle de reconnaissance faciale
 
 # Dictionnaire pour stocker les encodages des visages
 known_face_encodings = []
@@ -56,7 +56,8 @@ load_known_faces()
 
 # Initialisation de la base de données
 def init_db():
-    with sqlite3.connect(DATABASE) as conn:
+    with sqlite3.connect(DATABASE, timeout=10) as conn:
+        conn.execute('PRAGMA journal_mode=WAL;')  # Activer le mode WAL pour éviter les verrous
         cursor = conn.cursor()
 
         # Table des utilisateurs
@@ -67,7 +68,8 @@ def init_db():
                 password TEXT NOT NULL,
                 full_name TEXT NOT NULL,
                 role TEXT NOT NULL CHECK(role IN ('ADMIN', 'USER', 'EMPLOYEE')),
-                balance REAL DEFAULT 0
+                balance REAL DEFAULT 0,
+                last_balance_update DATE
             )
         ''')
 
@@ -108,6 +110,19 @@ def init_db():
             )
         ''')
 
+        # Table balance_history
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS balance_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                amount REAL NOT NULL,
+                action TEXT NOT NULL CHECK(action IN ('ADD', 'SUBTRACT')),
+                performed_by INTEGER NOT NULL,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                requires_approval BOOLEAN DEFAULT FALSE
+            )
+        ''')
+
         # Ajouter l'administrateur par défaut
         cursor.execute('SELECT * FROM users WHERE username = ?', ('admin',))
         admin = cursor.fetchone()
@@ -125,7 +140,7 @@ def role_required(role):
         def decorated_function(*args, **kwargs):
             if not session.get('user_id'):
                 return redirect(url_for('login'))
-            with sqlite3.connect(DATABASE) as conn:
+            with sqlite3.connect(DATABASE, timeout=10) as conn:
                 cursor = conn.cursor()
                 cursor.execute('SELECT role FROM users WHERE id = ?', (session['user_id'],))
                 user_role = cursor.fetchone()[0]
@@ -140,7 +155,7 @@ def role_required(role):
 def get_current_user():
     if not session.get('user_id'):
         return None
-    with sqlite3.connect(DATABASE) as conn:
+    with sqlite3.connect(DATABASE, timeout=10) as conn:
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],))
         return cursor.fetchone()
@@ -163,7 +178,6 @@ def is_face_already_registered(new_face_encoding):
             return True
     return False
 
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -177,7 +191,7 @@ def register():
             flash('Tous les champs sont obligatoires.', 'error')
             return redirect(url_for('register'))
 
-        with sqlite3.connect(DATABASE) as conn:
+        with sqlite3.connect(DATABASE, timeout=10) as conn:
             cursor = conn.cursor()
             cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
             if cursor.fetchone():
@@ -210,7 +224,7 @@ def register():
 
                 # Vérifier si le visage existe déjà dans le dataset
                 if is_face_already_registered(face_encoding):
-                    flash('Ce visage est déjà enregistré. Veuillez utiliser un autre compte.', 'error')
+                    flash('Ce visage est déjà enregistré. Veuillez contacter l\'administration.', 'error')
                     cap.release()
                     cv2.destroyAllWindows()
                     return redirect(url_for('register'))
@@ -236,7 +250,7 @@ def register():
 
         # Ajouter l'utilisateur à la base de données
         hashed_password = generate_password_hash(password)
-        with sqlite3.connect(DATABASE) as conn:
+        with sqlite3.connect(DATABASE, timeout=10) as conn:
             cursor = conn.cursor()
             cursor.execute('INSERT INTO users (username, password, full_name, role) VALUES (?, ?, ?, ?)',
                            (username, hashed_password, full_name, role))
@@ -249,8 +263,6 @@ def register():
         return redirect(url_for('login'))
 
     return render_template("register.html")
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -405,13 +417,24 @@ def admin_loans():
 def employee_dashboard():
     with sqlite3.connect(DATABASE) as conn:
         cursor = conn.cursor()
+
+        # Récupérer la liste des utilisateurs
+        cursor.execute('SELECT * FROM users')
+        users = cursor.fetchall()
+
+        # Récupérer la liste des transactions
         cursor.execute('SELECT * FROM transactions')
         transactions = cursor.fetchall()
+
+        # Récupérer la liste des factures
         cursor.execute('SELECT * FROM invoices')
         invoices = cursor.fetchall()
+
+        # Récupérer la liste des prêts
         cursor.execute('SELECT * FROM loans')
         loans = cursor.fetchall()
-    return render_template("employee_dashboard.html", transactions=transactions, invoices=invoices, loans=loans)
+
+    return render_template("employee_dashboard.html", users=users, transactions=transactions, invoices=invoices, loans=loans)
 
 @app.route('/admin/users', methods=['GET', 'POST'])
 @role_required('ADMIN')
@@ -422,18 +445,30 @@ def admin_users():
         full_name = request.form.get('full_name')
         role = request.form.get('role')
 
+        # Vérifier si l'utilisateur existe déjà
         with sqlite3.connect(DATABASE) as conn:
             cursor = conn.cursor()
+            cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
+            existing_user = cursor.fetchone()
+
+            if existing_user:
+                flash('Ce nom d\'utilisateur existe déjà. Veuillez en choisir un autre.', 'error')
+                return redirect(url_for('admin_users'))
+
+            # Si l'utilisateur n'existe pas, l'ajouter
             cursor.execute('INSERT INTO users (username, password, full_name, role) VALUES (?, ?, ?, ?)',
                            (username, password, full_name, role))
             conn.commit()
+
         flash('Utilisateur ajouté avec succès.', 'success')
         return redirect(url_for('admin_users'))
 
+    # Afficher la liste des utilisateurs
     with sqlite3.connect(DATABASE) as conn:
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM users')
         users = cursor.fetchall()
+
     return render_template("admin_users.html", users=users)
 
 @app.route('/admin/users/delete/<int:user_id>')
@@ -441,10 +476,181 @@ def admin_users():
 def admin_delete_user(user_id):
     with sqlite3.connect(DATABASE) as conn:
         cursor = conn.cursor()
+
+        # Récupérer le nom d'utilisateur avant de le supprimer
+        cursor.execute('SELECT username FROM users WHERE id = ?', (user_id,))
+        user = cursor.fetchone()
+        if not user:
+            flash('Utilisateur non trouvé.', 'error')
+            return redirect(url_for('admin_users'))
+
+        username = user[0]
+
+        # Supprimer les transactions associées
+        cursor.execute('DELETE FROM transactions WHERE sender_id = ? OR receiver_id = ?', (user_id, user_id))
+
+        # Supprimer les factures associées
+        cursor.execute('DELETE FROM invoices WHERE user_id = ?', (user_id,))
+
+        # Supprimer les prêts associés
+        cursor.execute('DELETE FROM loans WHERE user_id = ?', (user_id,))
+
+        # Supprimer l'utilisateur
         cursor.execute('DELETE FROM users WHERE id = ?', (user_id,))
         conn.commit()
+
+    # Supprimer les images de l'utilisateur du dossier dataset
+    user_folder = os.path.join(DATASET_DIR, username)
+    if os.path.exists(user_folder):
+        for image_name in os.listdir(user_folder):
+            image_path = os.path.join(user_folder, image_name)
+            os.remove(image_path)
+        os.rmdir(user_folder)
+
+    # Recharger les visages connus
+    load_known_faces()
+
     flash('Utilisateur supprimé avec succès.', 'success')
     return redirect(url_for('admin_users'))
+
+@app.route('/admin/users/update_balance/<int:user_id>', methods=['GET', 'POST'])
+@role_required('ADMIN')
+def admin_update_balance(user_id):
+    if request.method == 'POST':
+        amount = float(request.form.get('amount'))  # Montant à ajouter ou retirer
+        action = request.form.get('action')  # 'add' ou 'subtract'
+
+        with sqlite3.connect(DATABASE) as conn:
+            cursor = conn.cursor()
+
+            # Récupérer le solde actuel de l'utilisateur
+            cursor.execute('SELECT balance FROM users WHERE id = ?', (user_id,))
+            current_balance = cursor.fetchone()[0]
+
+            # Mettre à jour le solde en fonction de l'action
+            if action == 'add':
+                new_balance = current_balance + amount
+            elif action == 'subtract':
+                if current_balance >= amount:  # Vérifier que le solde est suffisant
+                    new_balance = current_balance - amount
+                else:
+                    flash('Le solde est insuffisant pour effectuer cette opération.', 'error')
+                    return redirect(url_for('admin_users'))
+
+            # Mettre à jour le solde dans la base de données
+            cursor.execute('UPDATE users SET balance = ? WHERE id = ?', (new_balance, user_id))
+
+            # Journaliser l'opération
+            cursor.execute('''
+                INSERT INTO balance_history (user_id, amount, action, performed_by)
+                VALUES (?, ?, ?, ?)
+            ''', (user_id, amount, action.upper(), session['user_id']))
+
+            conn.commit()
+
+        flash(f'Solde mis à jour avec succès. Nouveau solde : {new_balance}', 'success')
+        return redirect(url_for('admin_users'))
+
+    # Afficher le formulaire de mise à jour du solde
+    return render_template("update_balance.html", user_id=user_id, role='ADMIN')
+
+@app.route('/admin/balance_history')
+@role_required('ADMIN')
+def admin_balance_history():
+    with sqlite3.connect(DATABASE) as conn:
+        conn.row_factory = sqlite3.Row  # Convertir les tuples en dictionnaires
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT bh.*, u.username as user_name, p.username as performed_by_name
+            FROM balance_history bh
+            JOIN users u ON bh.user_id = u.id
+            JOIN users p ON bh.performed_by = p.id
+        ''')
+        history = cursor.fetchall()
+
+    # Debug : Afficher les données récupérées dans la console
+    print("Données récupérées :", history)
+
+    return render_template("balance_history.html", history=history)
+
+@app.route('/admin/pending_requests')
+@role_required('ADMIN')
+def admin_pending_requests():
+    with sqlite3.connect(DATABASE) as conn:
+        conn.row_factory = sqlite3.Row  # Convertir les tuples en dictionnaires
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT bh.*, u.username as user_name, p.username as performed_by_name
+            FROM balance_history bh
+            JOIN users u ON bh.user_id = u.id
+            JOIN users p ON bh.performed_by = p.id
+            WHERE bh.requires_approval = TRUE
+        ''')
+        pending_requests = cursor.fetchall()
+
+    return render_template("admin_pending_requests.html", pending_requests=pending_requests)
+
+@app.route('/admin/approve_request/<int:request_id>')
+@role_required('ADMIN')
+def admin_approve_request(request_id):
+    with sqlite3.connect(DATABASE) as conn:
+        cursor = conn.cursor()
+
+        # Récupérer la demande
+        cursor.execute('SELECT * FROM balance_history WHERE id = ?', (request_id,))
+        request_data = cursor.fetchone()
+
+        if not request_data:
+            flash('Demande non trouvée.', 'error')
+            return redirect(url_for('admin_pending_requests'))
+
+        # Vérifier si la demande nécessite une approbation
+        if not request_data[6]:  # requires_approval est à l'index 6
+            flash('Cette demande ne nécessite pas d\'approbation.', 'error')
+            return redirect(url_for('admin_pending_requests'))
+
+        user_id = request_data[1]
+        amount = request_data[2]
+        action = request_data[3]
+
+        # Appliquer la modification
+        if action == 'ADD':
+            cursor.execute('UPDATE users SET balance = balance + ? WHERE id = ?', (amount, user_id))
+        elif action == 'SUBTRACT':
+            cursor.execute('UPDATE users SET balance = balance - ? WHERE id = ?', (amount, user_id))
+
+        # Marquer la demande comme approuvée
+        cursor.execute('UPDATE balance_history SET requires_approval = FALSE WHERE id = ?', (request_id,))
+        conn.commit()
+
+    flash('Demande approuvée avec succès.', 'success')
+    return redirect(url_for('admin_pending_requests'))
+
+@app.route('/admin/reject_request/<int:request_id>')
+@role_required('ADMIN')
+def admin_reject_request(request_id):
+    with sqlite3.connect(DATABASE) as conn:
+        cursor = conn.cursor()
+
+        # Récupérer la demande
+        cursor.execute('SELECT * FROM balance_history WHERE id = ?', (request_id,))
+        request_data = cursor.fetchone()
+
+        if not request_data:
+            flash('Demande non trouvée.', 'error')
+            return redirect(url_for('admin_pending_requests'))
+
+        # Vérifier si la demande nécessite une approbation
+        if not request_data[6]:  # requires_approval est à l'index 6
+            flash('Cette demande ne nécessite pas d\'approbation.', 'error')
+            return redirect(url_for('admin_pending_requests'))
+
+        # Marquer la demande comme refusée
+        cursor.execute('DELETE FROM balance_history WHERE id = ?', (request_id,))
+        conn.commit()
+
+    flash('Demande refusée avec succès.', 'success')
+    return redirect(url_for('admin_pending_requests'))
 
 @app.route('/employee/loans/approve/<int:loan_id>')
 @role_required('EMPLOYEE')
@@ -518,6 +724,75 @@ def transfer():
             return redirect(url_for('dashboard'))
 
     return render_template("transfer.html")
+@app.route('/employee/users/update_balance/<int:user_id>', methods=['GET', 'POST'])
+@role_required('EMPLOYEE')
+def employee_update_balance(user_id):
+    if request.method == 'POST':
+        amount = float(request.form.get('amount'))  # Montant à ajouter ou retirer
+        action = request.form.get('action')  # 'add' ou 'subtract'
+
+        # Limite pour l'employé : ne peut pas modifier le solde de plus de 1000 € par jour
+        if amount > 1000:
+            flash('Vous ne pouvez pas modifier le solde de plus de 1000 € par jour.', 'error')
+            return redirect(url_for('employee_dashboard'))
+
+        with sqlite3.connect(DATABASE) as conn:
+            cursor = conn.cursor()
+
+            # Récupérer le solde actuel de l'utilisateur et la date de la dernière mise à jour
+            cursor.execute('SELECT balance, last_balance_update FROM users WHERE id = ?', (user_id,))
+            user_data = cursor.fetchone()
+            current_balance = user_data[0]
+            last_balance_update = user_data[1]
+
+            # Vérifier si la dernière mise à jour a eu lieu aujourd'hui
+            today = datetime.now().date()
+            if last_balance_update == str(today):  # Convertir en chaîne pour la comparaison
+                # Récupérer la somme totale des montants modifiés aujourd'hui par cet employé pour cet utilisateur
+                cursor.execute('''
+                    SELECT COALESCE(SUM(amount), 0) FROM balance_history
+                    WHERE user_id = ? AND performed_by = ? AND DATE(timestamp) = ?
+                ''', (user_id, session['user_id'], today))
+                total_amount_today = cursor.fetchone()[0]
+
+                # Vérifier si la somme totale dépasse 1000 €
+                if total_amount_today + amount > 1000:
+                    # Enregistrer la demande en attente d'approbation
+                    cursor.execute('''
+                        INSERT INTO balance_history (user_id, amount, action, performed_by, requires_approval)
+                        VALUES (?, ?, ?, ?, TRUE)
+                    ''', (user_id, amount, action.upper(), session['user_id']))
+                    conn.commit()
+                    flash('Vous avez atteint la limite de 1000 € par jour. Une demande d\'approbation a été envoyée à l\'admin.', 'warning')
+                    return redirect(url_for('employee_dashboard'))
+
+            # Mettre à jour le solde en fonction de l'action
+            if action == 'add':
+                new_balance = current_balance + amount
+            elif action == 'subtract':
+                if current_balance >= amount:  # Vérifier que le solde est suffisant
+                    new_balance = current_balance - amount
+                else:
+                    flash('Le solde est insuffisant pour effectuer cette opération.', 'error')
+                    return redirect(url_for('employee_dashboard'))
+
+            # Mettre à jour le solde dans la base de données
+            cursor.execute('UPDATE users SET balance = ?, last_balance_update = ? WHERE id = ?',
+                           (new_balance, today, user_id))
+
+            # Journaliser l'opération
+            cursor.execute('''
+                INSERT INTO balance_history (user_id, amount, action, performed_by, requires_approval)
+                VALUES (?, ?, ?, ?, FALSE)
+            ''', (user_id, amount, action.upper(), session['user_id']))
+
+            conn.commit()
+
+        flash(f'Solde mis à jour avec succès. Nouveau solde : {new_balance}', 'success')
+        return redirect(url_for('employee_dashboard'))
+
+    # Afficher le formulaire de mise à jour du solde
+    return render_template("update_balance.html", user_id=user_id, role='EMPLOYEE')
 
 @app.route('/invoices', methods=['GET', 'POST'])
 def invoices():

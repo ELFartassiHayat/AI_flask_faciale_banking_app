@@ -309,3 +309,74 @@ body {
   text-align: center;
   font-size: 1.5rem;
 }
+/* Styles pour la page de mise à jour du solde */
+.update-balance-container {
+  max-width: 500px;
+  margin: 0 auto;
+  margin-top: 50px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.update-balance-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #007bff;
+}
+
+.update-balance-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.update-balance-form label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #343a40;
+}
+
+.update-balance-form input[type="number"],
+.update-balance-form select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.update-balance-form input[type="number"]:focus,
+.update-balance-form select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.update-balance-form button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.update-balance-form button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+.update-balance-form a {
+  display: inline-block;
+  margin-top: 10px;
+  text-align: center;
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.update-balance-form a:hover {
+  text-decoration: underline;
+}

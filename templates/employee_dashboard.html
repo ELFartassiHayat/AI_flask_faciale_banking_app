@@ -6,6 +6,27 @@
 <div class="container">
     <h1 class="mt-4">Tableau de bord Employé</h1>
 
+    <!-- Section pour mettre à jour le solde des utilisateurs -->
+    <h2 class="mt-4">Gestion des soldes</h2>
+    <ul class="list-group">
+        {% for user in users %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <strong>{{ user[3] }}</strong> ({{ user[1] }})<br>
+                <small>Rôle : {{ user[4] }}</small><br>
+                <small>Solde actuel : {{ user[5] }} €</small>
+            </div>
+            <div>
+                <!-- Bouton pour mettre à jour le solde -->
+                <a href="{{ url_for('employee_update_balance', user_id=user[0]) }}" class="btn btn-info btn-sm">
+                    <i class="fas fa-coins"></i> Mettre à jour le solde
+                </a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Section des transactions -->
     <h2 class="mt-4">Transactions</h2>
     <ul class="list-group">
         {% for transaction in transactions %}
@@ -15,6 +36,7 @@
         {% endfor %}
     </ul>
 
+    <!-- Section des factures -->
     <h2 class="mt-4">Factures</h2>
     <ul class="list-group">
         {% for invoice in invoices %}
@@ -27,6 +49,7 @@
         {% endfor %}
     </ul>
 
+    <!-- Section des prêts -->
     <h2 class="mt-4">Prêts</h2>
     <ul class="list-group">
         {% for loan in loans %}

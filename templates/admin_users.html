@@ -5,13 +5,12 @@
 {% block content %}
 <div class="container">
     <h1 class="mt-4">Gestion des utilisateurs</h1>
-        <!-- Lien de retour -->
-        <div class="mb-4">
-            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Retour au tableau de bord admin
-            </a>
-        </div>
-    
+    <!-- Lien de retour -->
+    <div class="mb-4">
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour au tableau de bord admin
+        </a>
+    </div>
 
     <div class="row mt-4">
         <!-- Formulaire pour ajouter un utilisateur -->
@@ -21,7 +20,7 @@
                     <h5 class="card-title">Ajouter un utilisateur</h5>
                 </div>
                 <div class="card-body">
-                    <form method="POST">
+                    <form method="POST" action="{{ url_for('admin_users') }}">
                         <div class="form-group">
                             <label for="username">Nom d'utilisateur</label>
                             <input type="text" class="form-control" id="username" name="username" required>
@@ -58,10 +57,21 @@
                     <ul class="list-group">
                         {% for user in users %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {{ user[3] }} ({{ user[4] }})
-                            <a href="{{ url_for('admin_delete_user', user_id=user[0]) }}" class="btn btn-danger btn-sm">
-                                Supprimer
-                            </a>
+                            <div>
+                                <strong>{{ user[3] }}</strong> ({{ user[1] }})<br>
+                                <small>Rôle : {{ user[4] }}</small><br>
+                                <small>Solde : {{ user[5] }}</small>
+                            </div>
+                            <div>
+                                <!-- Bouton pour mettre à jour le solde -->
+                                <a href="{{ url_for('admin_update_balance', user_id=user[0]) }}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-coins"></i> Solde
+                                </a>
+                                <!-- Bouton pour supprimer l'utilisateur -->
+                                <a href="{{ url_for('admin_delete_user', user_id=user[0]) }}" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i> Supprimer
+                                </a>
+                            </div>
                         </li>
                         {% endfor %}
                     </ul>

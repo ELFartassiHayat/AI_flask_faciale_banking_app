@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Historique des modifications de solde{% endblock %}
+
+{% block content %}
+<div class="container main-content">
+    <h1 class="mt-4">Historique des modifications de solde</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Utilisateur</th>
+                <th>Montant</th>
+                <th>Action</th>
+                <th>Effectué par</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in history %}
+            <tr>
+                <td>{{ entry['user_name'] }}</td>
+                <td>{{ entry['amount'] }}</td>
+                <td>{{ entry['action'] }}</td>
+                <td>{{ entry['performed_by_name'] }}</td>
+                <td>{{ entry['timestamp'] }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="text-center">Aucune donnée disponible.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
