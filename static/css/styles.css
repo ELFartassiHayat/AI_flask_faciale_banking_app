@@ -12,7 +12,7 @@ body {
   padding-bottom: 20px;
 }
 
-/* Styles pour la barre de navigation */
+/* Barre de navigation */
 .navbar {
   margin-bottom: 20px;
   background-color: #343a40 !important;
@@ -32,7 +32,7 @@ body {
   color: #007bff !important;
 }
 
-/* Styles pour les cartes */
+/* Cartes */
 .card {
   margin-bottom: 20px;
   border: 1px solid #ddd;
@@ -56,7 +56,7 @@ body {
   padding: 20px;
 }
 
-/* Styles pour les boutons */
+/* Boutons */
 .btn {
   margin-right: 5px;
   border-radius: 4px;
@@ -113,7 +113,7 @@ body {
   border-color: #117a8b;
 }
 
-/* Styles pour les formulaires */
+/* Formulaires */
 .form-group {
   margin-bottom: 1rem;
 }
@@ -128,7 +128,7 @@ body {
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-/* Styles pour les listes */
+/* Listes */
 .list-group {
   margin-bottom: 20px;
 }
@@ -147,7 +147,7 @@ body {
   background-color: #f8f9fa;
 }
 
-/* Styles pour les alertes */
+/* Alertes */
 .alert {
   margin-bottom: 20px;
   border-radius: 4px;
@@ -172,144 +172,16 @@ body {
   color: #0c5460;
 }
 
-/* Styles pour le footer */
+/* Footer */
 .footer {
-  margin-top: auto; 
-    background-color: #343a40;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-}
-
-/* Styles pour les pages spécifiques */
-
-/* Page d'accueil */
-.jumbotron {
-  background-color: #e9ecef;
-  padding: 2rem 1rem;
-  margin-bottom: 2rem;
-  border-radius: 0.3rem;
-}
-
-.jumbotron h1 {
-  font-size: 3rem;
-  font-weight: bold;
-}
-
-.jumbotron p {
-  font-size: 1.25rem;
-}
-
-/* Page de connexion et d'inscription */
-.login-card, .register-card {
-  max-width: 500px;
-  margin: 0 auto;
-  margin-top: 50px;
-}
-
-.login-card .card-header, .register-card .card-header {
-  background-color: #007bff;
+  margin-top: auto;
+  background-color: #343a40;
   color: white;
   text-align: center;
-  font-size: 1.5rem;
+  padding: 10px 0;
 }
 
-/* Tableau de bord admin */
-.admin-dashboard .card {
-  margin-bottom: 20px;
-}
-
-.admin-dashboard .card-header {
-  background-color: #007bff;
-  color: white;
-}
-
-.admin-dashboard .card-body {
-  padding: 20px;
-}
-
-/* Gestion des utilisateurs */
-.admin-users .card {
-  margin-bottom: 20px;
-}
-
-.admin-users .card-header {
-  background-color: #007bff;
-  color: white;
-}
-
-.admin-users .card-body {
-  padding: 20px;
-}
-
-.admin-users .list-group-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Tableau de bord employé */
-.employee-dashboard .card {
-  margin-bottom: 20px;
-}
-
-.employee-dashboard .card-header {
-  background-color: #007bff;
-  color: white;
-}
-
-.employee-dashboard .card-body {
-  padding: 20px;
-}
-
-.employee-dashboard .list-group-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Page de transfert */
-.transfer-card {
-  max-width: 500px;
-  margin: 0 auto;
-  margin-top: 50px;
-}
-
-.transfer-card .card-header {
-  background-color: #007bff;
-  color: white;
-  text-align: center;
-  font-size: 1.5rem;
-}
-
-/* Page des factures */
-.invoices-card {
-  max-width: 800px;
-  margin: 0 auto;
-  margin-top: 50px;
-}
-
-.invoices-card .card-header {
-  background-color: #007bff;
-  color: white;
-  text-align: center;
-  font-size: 1.5rem;
-}
-
-/* Page des prêts */
-.loans-card {
-  max-width: 800px;
-  margin: 0 auto;
-  margin-top: 50px;
-}
-
-.loans-card .card-header {
-  background-color: #007bff;
-  color: white;
-  text-align: center;
-  font-size: 1.5rem;
-}
-/* Styles pour la page de mise à jour du solde */
+/* Page de mise à jour du solde */
 .update-balance-container {
   max-width: 500px;
   margin: 0 auto;

@@ -4,14 +4,14 @@
 
 {% block content %}
 <div class="container">
+    <!-- Lien de retour avec icône -->
+    <div class="mb-4">
+        <a href="{{ url_for('admin_dashboard') }}" class="text-secondary">
+            <i class="fas fa-arrow-left"></i> Retour au tableau de bord admin
+        </a>
+    </div>
+
     <h1 class="mt-4">Transactions</h1>
-        <!-- Lien de retour -->
-        <div class="mb-4">
-            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Retour au tableau de bord admin
-            </a>
-        </div>
-    
     
     <ul class="list-group">
         {% for transaction in transactions %}

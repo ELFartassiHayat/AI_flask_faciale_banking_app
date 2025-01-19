@@ -4,13 +4,14 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="mt-4">Gestion des utilisateurs</h1>
-    <!-- Lien de retour -->
+    <!-- Lien de retour avec icône -->
     <div class="mb-4">
-        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+        <a href="{{ url_for('admin_dashboard') }}" class="text-secondary">
             <i class="fas fa-arrow-left"></i> Retour au tableau de bord admin
         </a>
     </div>
+
+    <h1 class="mt-4">Gestion des utilisateurs</h1>
 
     <div class="row mt-4">
         <!-- Formulaire pour ajouter un utilisateur -->
