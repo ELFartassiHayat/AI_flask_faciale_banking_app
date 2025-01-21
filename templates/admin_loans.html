@@ -13,12 +13,27 @@
 
     <h1 class="mt-4">Prêts</h1>
     
-    <ul class="list-group">
-        {% for loan in loans %}
-        <li class="list-group-item">
-            Utilisateur : {{ loan[1] }} | Montant : {{ loan[2] }} € | Taux : {{ loan[3] }}% | Statut : {{ loan[4] }}
-        </li>
-        {% endfor %}
-    </ul>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Utilisateur</th>
+                    <th>Montant</th>
+                    <th>Taux d'intérêt</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loan in loans %}
+                <tr>
+                    <td>{{ loan[1] }}</td>
+                    <td>{{ loan[2] }} €</td>
+                    <td>{{ loan[3] }}%</td>
+                    <td>{{ loan[4] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

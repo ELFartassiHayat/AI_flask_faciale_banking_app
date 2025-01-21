@@ -13,12 +13,27 @@
 
     <h1 class="mt-4">Transactions</h1>
     
-    <ul class="list-group">
-        {% for transaction in transactions %}
-        <li class="list-group-item">
-            De : {{ transaction[1] }} | À : {{ transaction[2] }} | Montant : {{ transaction[3] }} € | Date : {{ transaction[4] }}
-        </li>
-        {% endfor %}
-    </ul>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Expéditeur</th>
+                    <th>Destinataire</th>
+                    <th>Montant</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction[1] }}</td>
+                    <td>{{ transaction[2] }}</td>
+                    <td>{{ transaction[3] }} €</td>
+                    <td>{{ transaction[4] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

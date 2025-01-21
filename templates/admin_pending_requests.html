@@ -3,7 +3,7 @@
 {% block title %}Demandes en attente{% endblock %}
 
 {% block content %}
-<div class="container main-content">
+<div class="container">
     <!-- Lien de retour avec icône -->
     <div class="mb-4">
         <a href="{{ url_for('admin_dashboard') }}" class="text-secondary">
@@ -12,32 +12,35 @@
     </div>
 
     <h1 class="mt-4">Demandes en attente</h1>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Utilisateur</th>
-                <th>Montant</th>
-                <th>Action</th>
-                <th>Effectué par</th>
-                <th>Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for request in pending_requests %}
-            <tr>
-                <td>{{ request['user_name'] }}</td>
-                <td>{{ request['amount'] }}</td>
-                <td>{{ request['action'] }}</td>
-                <td>{{ request['performed_by_name'] }}</td>
-                <td>{{ request['timestamp'] }}</td>
-                <td>
-                    <a href="{{ url_for('admin_approve_request', request_id=request['id']) }}" class="btn btn-success">Approuver</a>
-                    <a href="{{ url_for('admin_reject_request', request_id=request['id']) }}" class="btn btn-danger">Rejeter</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Utilisateur</th>
+                    <th>Montant</th>
+                    <th>Action</th>
+                    <th>Effectué par</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in pending_requests %}
+                <tr>
+                    <td>{{ request['user_name'] }}</td>
+                    <td>{{ request['amount'] }}</td>
+                    <td>{{ request['action'] }}</td>
+                    <td>{{ request['performed_by_name'] }}</td>
+                    <td>{{ request['timestamp'] }}</td>
+                    <td>
+                        <a href="{{ url_for('admin_approve_request', request_id=request['id']) }}" class="btn btn-success btn-sm">Approuver</a>
+                        <a href="{{ url_for('admin_reject_request', request_id=request['id']) }}" class="btn btn-danger btn-sm">Rejeter</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

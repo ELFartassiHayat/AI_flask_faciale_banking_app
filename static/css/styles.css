@@ -1,18 +1,37 @@
-/* Styles généraux */
+/* Réinitialisation des marges et paddings */
+html,
 body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: "Arial", sans-serif;
   background-color: #f8f9fa;
-  font-family: 'Arial', sans-serif;
+}
+
+/* Structure de base */
+body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-.container {
-  padding-top: 20px;
-  padding-bottom: 20px;
+/* Contenu principal */
+main {
+  flex: 1;
+  padding: 20px 0; /* Espacement vertical */
 }
 
-/* Barre de navigation */
+/* Footer */
+footer {
+  flex-shrink: 0;
+  background-color: #343a40;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: auto;
+}
+
+/* Navbar */
 .navbar {
   margin-bottom: 20px;
   background-color: #343a40 !important;
@@ -172,15 +191,6 @@ body {
   color: #0c5460;
 }
 
-/* Footer */
-.footer {
-  margin-top: auto;
-  background-color: #343a40;
-  color: white;
-  text-align: center;
-  padding: 10px 0;
-}
-
 /* Page de mise à jour du solde */
 .update-balance-container {
   max-width: 500px;
@@ -251,4 +261,52 @@ body {
 
 .update-balance-form a:hover {
   text-decoration: underline;
+}
+
+/* Styles pour les petits écrans */
+@media (max-width: 768px) {
+  .navbar-nav .nav-link {
+    padding: 10px;
+    text-align: center;
+  }
+
+  .card {
+    margin-bottom: 15px;
+  }
+
+  .update-balance-container {
+    padding: 15px;
+  }
+
+  .form-control {
+    font-size: 14px;
+  }
+
+  .btn {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}
+
+.btn-action {
+  margin-right: 8px;
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+  .btn-action {
+    margin-right: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .btn-action {
+    margin-right: 0;
+    margin-bottom: 8px;
+    width: 100%;
+  }
+
+  .list-group-item > div {
+    display: flex;
+    flex-direction: column;
+  }
 }

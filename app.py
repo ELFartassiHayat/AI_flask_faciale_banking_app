@@ -24,9 +24,9 @@ SHAPE_PREDICTOR_PATH = "shape_predictor_68_face_landmarks.dat"
 FACE_RECOGNITION_PATH = "dlib_face_recognition_resnet_model_v1.dat"
 
 # Charger les modèles dlib
-detector = dlib.get_frontal_face_detector()  # Détecteur de visages
-sp = dlib.shape_predictor(SHAPE_PREDICTOR_PATH)  # Prédicteur de points de repère faciaux
-facerec = dlib.face_recognition_model_v1(FACE_RECOGNITION_PATH)  # Modèle de reconnaissance faciale
+detector = dlib.get_frontal_face_detector()  
+sp = dlib.shape_predictor(SHAPE_PREDICTOR_PATH)  
+facerec = dlib.face_recognition_model_v1(FACE_RECOGNITION_PATH) 
 
 # Dictionnaire pour stocker les encodages des visages
 known_face_encodings = []
@@ -133,7 +133,7 @@ def init_db():
 
 init_db()
 
-# Décorateur pour vérifier les rôles
+#  vérifier les rôles
 def role_required(role):
     def decorator(f):
         @wraps(f)
@@ -159,24 +159,19 @@ def get_current_user():
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],))
         return cursor.fetchone()
-
-# Routes principales
-@app.route('/')
-def index():
-    return render_template("index.html")
-
+    
 def is_face_already_registered(new_face_encoding):
-    """
-    Vérifie si le visage de l'utilisateur existe déjà dans le dataset.
-    :param new_face_encoding: L'encodage du visage de l'utilisateur en cours d'inscription.
-    :return: True si le visage existe déjà, False sinon.
-    """
     for known_encoding in known_face_encodings:
         # Calculer la distance entre les encodages
         distance = np.linalg.norm(new_face_encoding - known_encoding)
         if distance < 0.5:  # Seuil de similarité
             return True
     return False
+# Routes principales
+@app.route('/')
+def index():
+    return render_template("index.html")
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

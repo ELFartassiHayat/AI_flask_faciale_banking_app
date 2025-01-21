@@ -15,7 +15,7 @@
 
     <div class="row mt-4">
         <!-- Formulaire pour ajouter un utilisateur -->
-        <div class="col-md-6">
+        <div class="col-md-6 mb-3">
             <div class="card">
                 <div class="card-header bg-primary text-white">
                     <h5 class="card-title">Ajouter un utilisateur</h5>
@@ -49,7 +49,7 @@
         </div>
 
         <!-- Liste des utilisateurs -->
-        <div class="col-md-6">
+        <div class="col-md-6 mb-3">
             <div class="card">
                 <div class="card-header bg-primary text-white">
                     <h5 class="card-title">Liste des utilisateurs</h5>
@@ -65,11 +65,11 @@
                             </div>
                             <div>
                                 <!-- Bouton pour mettre à jour le solde -->
-                                <a href="{{ url_for('admin_update_balance', user_id=user[0]) }}" class="btn btn-info btn-sm">
+                                <a href="{{ url_for('admin_update_balance', user_id=user[0]) }}" class="btn btn-info btn-sm mr-2 btn-action">
                                     <i class="fas fa-coins"></i> Solde
                                 </a>
                                 <!-- Bouton pour supprimer l'utilisateur -->
-                                <a href="{{ url_for('admin_delete_user', user_id=user[0]) }}" class="btn btn-danger btn-sm">
+                                <a href="{{ url_for('admin_delete_user', user_id=user[0]) }}" class="btn btn-danger btn-sm btn-action">
                                     <i class="fas fa-trash"></i> Supprimer
                                 </a>
                             </div>
