@@ -371,15 +371,12 @@ def admin_dashboard():
     with sqlite3.connect(DATABASE) as conn:
         cursor = conn.cursor()
 
-        # Récupérer la liste des utilisateurs
         cursor.execute('SELECT * FROM users')
         users = cursor.fetchall()
 
-        # Récupérer la liste des transactions
         cursor.execute('SELECT * FROM transactions')
         transactions = cursor.fetchall()
 
-        # Récupérer la liste des prêts
         cursor.execute('SELECT * FROM loans')
         loans = cursor.fetchall()
 
@@ -413,19 +410,15 @@ def employee_dashboard():
     with sqlite3.connect(DATABASE) as conn:
         cursor = conn.cursor()
 
-        # Récupérer la liste des utilisateurs
         cursor.execute('SELECT * FROM users')
         users = cursor.fetchall()
 
-        # Récupérer la liste des transactions
         cursor.execute('SELECT * FROM transactions')
         transactions = cursor.fetchall()
 
-        # Récupérer la liste des factures
         cursor.execute('SELECT * FROM invoices')
         invoices = cursor.fetchall()
 
-        # Récupérer la liste des prêts
         cursor.execute('SELECT * FROM loans')
         loans = cursor.fetchall()
 
@@ -742,7 +735,7 @@ def employee_update_balance(user_id):
 
             # Vérifier si la dernière mise à jour a eu lieu aujourd'hui
             today = datetime.now().date()
-            if last_balance_update == str(today):  # Convertir en chaîne pour la comparaison
+            if last_balance_update == str(today):  
                 # Récupérer la somme totale des montants modifiés aujourd'hui par cet employé pour cet utilisateur
                 cursor.execute('''
                     SELECT COALESCE(SUM(amount), 0) FROM balance_history
