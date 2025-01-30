@@ -5,3 +5,4 @@ opencv-python==4.7.0.72
 Werkzeug==2.3.6
 dlib==19.24.2
 Pillow==10.0.0
+gunicorn
