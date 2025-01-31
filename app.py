@@ -292,6 +292,11 @@ def login():
             start_time = datetime.now()
 
             try:
+                # Vérifier si known_face_encodings n'est pas vide avant de continuer
+                if not known_face_encodings:
+                    flash("Erreur: Utilisateur non reconnu. Veuillez vous inscrire", "error")
+                    return redirect(url_for('login'))
+
                 while (datetime.now() - start_time).total_seconds() < 10:  # Limite à 10 secondes
                     ret, frame = cap.read()
                     if not ret:
@@ -307,15 +312,21 @@ def login():
 
                         # Comparer avec les visages connus
                         distances = [np.linalg.norm(face_encoding - known_face) for known_face in known_face_encodings]
-                        min_distance = min(distances)
+                        
+                        # Vérifier si distances n'est pas vide
+                        if distances:
+                            min_distance = min(distances)
 
-                        # Vérifier si la distance minimale est inférieure au seuil
-                        if min_distance < 0.5:
-                            first_match_index = distances.index(min_distance)
-                            name = known_face_names[first_match_index]
-                            user_found = True
-                            print(f"Utilisateur reconnu : {name}")
-                            break
+                            # Vérifier si la distance minimale est inférieure au seuil
+                            if min_distance < 0.5:
+                                first_match_index = distances.index(min_distance)
+                                name = known_face_names[first_match_index]
+                                user_found = True
+                                print(f"Utilisateur reconnu : {name}")
+                                break
+                        else:
+                            flash("Erreur: Aucune correspondance de visage trouvée.", "error")
+                            return redirect(url_for('login'))
 
                     if user_found:
                         break
@@ -349,6 +360,7 @@ def login():
                 return redirect(url_for('register'))
 
     return render_template("login.html")
+
 
 @app.route('/dashboard')
 def dashboard():
@@ -841,5 +853,4 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))  
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(debug=True)
